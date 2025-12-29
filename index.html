@@ -5,7 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./responsive.css">
+    <!-- Font Awesome -->
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
+        rel="stylesheet">
+
+
 
 </head>
 
@@ -19,18 +29,18 @@
 
         <ul class="nav-center">
             <li><a href="#">Home</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Newsroom</a></li>
-            <li><a href="#">Partners</a></li>
+            <li><a href="./about.html">About</a></li>
+            <li><a href="./news.html">Newsroom</a></li>
+            <li><a href="./partners.html">Partners</a></li>
             <li><a href="#">panda ads</a></li>
             <li><a href="#">Contact</a></li>
             <li><a href="#">Careers</a></li>
+                <div class="nav-right">
+            <button class="location-btn">Choose location</button>
+            <button class="search-btn" aria-label="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </div>
         </ul>
 
-        <div class="nav-right">
-            <button class="location-btn">Choose location</button>
-            <button class="search-btn" aria-label="Search">🔍</button>
-        </div>
     </nav>
     <section class="hero">
         <div class="video-wrapper" id="videoWrapper">
@@ -42,7 +52,7 @@
             </video>
 
             <div class="video-overlay" aria-hidden="true">
-                <h1>food and groceries in a tap</h1>
+                <h1>food <br> and groceries in a tap</h1>
             </div>
 
             <button id="playBtn" class="video-play" aria-label="Play">▶</button>
@@ -208,8 +218,8 @@
         <footer class="footer">
             <div class="footer-container">
                 <!-- Logo Section -->
-                <div class="footer-logo">
-                    <span class="panda-icon">🐼</span> <span class="brand-name">foodpanda</span>
+                               <div class="footer-logo">
+                    <img src="./asseet/foodpanda_logo_2023.svg" alt=""></span> 
                 </div>
 
                 <!-- Main Links Grid -->

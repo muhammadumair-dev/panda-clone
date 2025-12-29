@@ -4,39 +4,39 @@ document.addEventListener('DOMContentLoaded', function () {
   const playBtn = document.getElementById('playBtn');
   const wrapper = document.getElementById('videoWrapper');
 
-  if (!video) return;
-
-  function updateButton() {
-    playBtn.textContent = (video.paused || video.ended) ? '▶' : '❚❚';
-  }
-
-  async function tryAutoplay() {
-    try {
-      // ensure muted (required for autoplay in many browsers)
-      video.muted = true;
-      await video.play();
-    } catch (err) {
-      // autoplay blocked — show the play button so user can start the video
-      playBtn.classList.remove('hidden');
-      // keep button visible
-      playBtn.focus();
+  // Only run video-specific logic when a video is present on the page
+  if (video) {
+    function updateButton() {
+      if (playBtn) playBtn.textContent = (video.paused || video.ended) ? '▶' : '❚❚';
     }
+
+    async function tryAutoplay() {
+      try {
+        // ensure muted (required for autoplay in many browsers)
+        video.muted = true;
+        await video.play();
+      } catch (err) {
+        // autoplay blocked — show the play button so user can start the video
+        if (playBtn) playBtn.classList.remove('hidden');
+        playBtn?.focus();
+      }
+    }
+
+    function togglePlay() {
+      if (video.paused || video.ended) video.play(); else video.pause();
+    }
+
+    playBtn?.addEventListener('click', function (e) { e.preventDefault(); togglePlay(); });
+    video.addEventListener('click', togglePlay);
+
+    video.addEventListener('play', function () { wrapper?.classList.add('playing'); updateButton(); });
+    video.addEventListener('pause', function () { wrapper?.classList.remove('playing'); updateButton(); });
+    video.addEventListener('ended', function () { wrapper?.classList.remove('playing'); updateButton(); });
+
+    // small delay so page layout settles, then try autoplay
+    setTimeout(tryAutoplay, 200);
+    updateButton();
   }
-
-  function togglePlay() {
-    if (video.paused || video.ended) video.play(); else video.pause();
-  }
-
-  playBtn.addEventListener('click', function (e) { e.preventDefault(); togglePlay(); });
-  video.addEventListener('click', togglePlay);
-
-  video.addEventListener('play', function () { wrapper.classList.add('playing'); updateButton(); });
-  video.addEventListener('pause', function () { wrapper.classList.remove('playing'); updateButton(); });
-  video.addEventListener('ended', function () { wrapper.classList.remove('playing'); updateButton(); });
-
-  // small delay so page layout settles, then try autoplay
-  setTimeout(tryAutoplay, 200);
-  updateButton();
 
   // NEWS SLIDER INIT (drag, arrows, keyboard, autoplay)
   (function(){
@@ -162,6 +162,160 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // init
     setTimeout(updateFades, 200);
+  })();
+
+  // HERO SLIDER INIT (autoplay, arrows, drag, keyboard, dots)
+  (function(){
+    const slider = document.getElementById('heroSlider');
+    const prevBtn = document.getElementById('heroPrevBtn');
+    const nextBtn = document.getElementById('heroNextBtn');
+    const dotsWrap = document.getElementById('heroDots');
+    if(!slider) return;
+
+    const slides = Array.from(slider.querySelectorAll('.slide'));
+    const textSlides = Array.from(document.querySelectorAll('.hero-slider .text-slide'));
+    const heroLive = document.getElementById('heroLive');
+    const getSlideWidth = () => slider.clientWidth;
+
+    // sync text slide active class (for semantics)
+    function updateText(index){
+      if(!textSlides.length) return;
+      textSlides.forEach((t,i)=> t.classList.toggle('active', i === index));
+      if(heroLive){
+        const title = textSlides[index]?.querySelector('h3')?.textContent || '';
+        heroLive.textContent = title;
+      }
+    }
+
+    // continuous transform sync — called on scroll via rAF
+    let rafId = null;
+    function syncText(){
+      const progress = slider.scrollLeft / Math.max(1, getSlideWidth());
+      textSlides.forEach((t, i)=>{
+        const diff = i - progress;
+        const offset = diff * 100; // percentage
+        t.style.transform = `translateX(${offset}%)`;
+        const opacity = 1 - Math.min(Math.abs(diff), 1);
+        t.style.opacity = opacity;
+      });
+    }
+    function scheduleSync(){
+      if(rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(syncText);
+    }
+
+    function scrollToIndex(i){
+      const left = Math.round(i * getSlideWidth());
+      slider.scrollTo({ left, behavior: 'smooth' });
+      updateDots();
+      updateText(i);
+    }
+
+    function scrollNext(){
+      const max = slider.scrollWidth - slider.clientWidth;
+      if (Math.abs(slider.scrollLeft - max) <= 2) {
+        scrollToIndex(0);
+      } else {
+        slider.scrollBy({ left: getSlideWidth(), behavior: 'smooth' });
+      }
+    }
+
+    function scrollPrev(){
+      if (slider.scrollLeft <= 4) {
+        // jump to last slide aligned to start
+        slider.scrollTo({ left: slider.scrollWidth - slider.clientWidth, behavior: 'smooth' });
+      } else {
+        slider.scrollBy({ left: -getSlideWidth(), behavior: 'smooth' });
+      }
+    }
+
+    function updateDots(){
+      if(!dotsWrap) return;
+      const dots = Array.from(dotsWrap.querySelectorAll('.dot'));
+      let index = Math.round(slider.scrollLeft / getSlideWidth());
+      index = Math.max(0, Math.min(index, slides.length - 1));
+      dots.forEach((d, i)=> d.classList.toggle('active', i===index));
+      updateText(index);
+    }
+
+    function createDots(){
+      if(!dotsWrap) return;
+      dotsWrap.innerHTML = '';
+      slides.forEach((s,i)=>{
+        const b = document.createElement('button');
+        b.className = 'dot';
+        b.setAttribute('aria-label', 'Go to slide '+(i+1));
+        b.addEventListener('click', ()=> scrollToIndex(i));
+        dotsWrap.appendChild(b);
+      });
+      updateDots();
+    }
+
+    function updateDots(){
+      if(!dotsWrap) return;
+      const dots = Array.from(dotsWrap.querySelectorAll('.dot'));
+      const index = Math.round(slider.scrollLeft / getSlideWidth());
+      dots.forEach((d, i)=> d.classList.toggle('active', i===index));
+    }
+
+    nextBtn?.addEventListener('click', scrollNext);
+    prevBtn?.addEventListener('click', scrollPrev);
+
+    slider.addEventListener('scroll', updateDots);
+    slider.addEventListener('keydown', (e)=>{
+      if(e.key === 'ArrowRight'){ e.preventDefault(); scrollNext(); }
+      if(e.key === 'ArrowLeft'){ e.preventDefault(); scrollPrev(); }
+    });
+
+    // pointer drag
+    let isDown = false, startX = 0, scrollStart = 0;
+    slider.addEventListener('pointerdown', (e)=>{
+      isDown = true; slider.setPointerCapture(e.pointerId);
+      startX = e.clientX; scrollStart = slider.scrollLeft;
+      slider.classList.add('dragging');
+      // disable text transitions while dragging
+      textSlides.forEach(t=> t.classList.add('no-transition'));
+      pauseAuto();
+    });
+    slider.addEventListener('pointermove', (e)=>{ if(!isDown) return; const dx = e.clientX - startX; slider.scrollLeft = scrollStart - dx; });
+    slider.addEventListener('pointerup', (e)=>{ isDown = false; try{ slider.releasePointerCapture(e.pointerId); }catch(_){} slider.classList.remove('dragging'); textSlides.forEach(t=> t.classList.remove('no-transition')); resumeAuto(); scheduleSync(); updateDots(); });
+    slider.addEventListener('pointercancel', ()=>{ isDown = false; slider.classList.remove('dragging'); textSlides.forEach(t=> t.classList.remove('no-transition')); resumeAuto(); scheduleSync(); updateDots(); });
+
+    // touch fallback
+    slider.addEventListener('touchstart', ()=>{ pauseAuto(); textSlides.forEach(t=> t.classList.add('no-transition')); });
+    slider.addEventListener('touchend', ()=>{ resumeAuto(); textSlides.forEach(t=> t.classList.remove('no-transition')); scheduleSync(); updateDots(); });
+
+    // vertical wheel / scroll should advance slides (so text + image move together)
+    let wheelThrottle = false;
+    slider.addEventListener('wheel', function(e){
+      // prefer vertical movement; ignore horizontal gestures
+      if(Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
+      e.preventDefault();
+      if(wheelThrottle) return;
+      wheelThrottle = true;
+      setTimeout(()=> wheelThrottle = false, 600);
+      if(e.deltaY > 0) scrollNext(); else scrollPrev();
+    }, { passive: false });
+
+    // when user resizes or slides by other means, update dots/text and sync transforms
+    slider.addEventListener('scroll', ()=>{ scheduleSync(); updateDots(); });
+    slider.addEventListener('keydown', (e)=>{
+      if(e.key === 'ArrowRight'){ e.preventDefault(); scrollNext(); }
+      if(e.key === 'ArrowLeft'){ e.preventDefault(); scrollPrev(); }
+    });
+
+    // autoplay
+    let autoTimer = null;
+    function startAuto(){ if(autoTimer) return; autoTimer = setInterval(scrollNext, 3500); }
+    function pauseAuto(){ if(autoTimer){ clearInterval(autoTimer); autoTimer = null; } }
+    function resumeAuto(){ if(!autoTimer) startAuto(); }
+
+    slider.addEventListener('mouseenter', pauseAuto);
+    slider.addEventListener('mouseleave', resumeAuto);
+
+    // init
+    createDots();
+    startAuto();
   })();
 
   // scroll-to-top button behavior
