@@ -316,8 +316,6 @@ body {
         font-size: clamp(20px, 8.5vw, 36px);
     }
 }
-
-/* Feature / two-column section */
 .feature {
 
     background: #fff;
@@ -430,7 +428,7 @@ body {
     padding: 18px 6px;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
-    /* hide native scrollbar */
+
     scrollbar-width: none;
     -ms-overflow-style: none;
     justify-self: center;
@@ -522,7 +520,6 @@ body {
     font-weight: 700;
 }
 
-/* fades to mimic partial cards at edges */
 .slider-section .slider::before,
 .slider-section .slider::after {
     content: '';
@@ -687,7 +684,7 @@ body {
     background-color: #000000;
     color: #ffffff;
     padding: 60px 8% 30px 8%;
-    /* Adjust padding for responsiveness */
+ 
 }
 
 .footer-container {
@@ -695,7 +692,7 @@ body {
     margin: 0 auto;
 }
 
-/* Logo Styles */
+
 .footer-logo {
     margin-bottom: 40px;
     display: flex;
@@ -704,7 +701,7 @@ body {
 
 .panda-icon {
     background-color: #D70F64;
-    /* foodpanda pink */
+
     color: white;
     padding: 5px;
     border-radius: 6px;
@@ -753,7 +750,6 @@ body {
     opacity: 0.7;
 }
 
-/* Social Icons */
 .social-icons {
     display: flex;
     gap: 20px;
@@ -765,7 +761,6 @@ body {
     text-decoration: none;
 }
 
-/* Bottom Bar */
 .footer-bottom {
     display: flex;
     justify-content: space-between;
@@ -779,7 +774,7 @@ body {
     text-decoration: none;
 }
 
-/* Responsive Design for Mobile */
+
 @media (max-width: 768px) {
     .footer-grid {
         grid-template-columns: 1fr;
@@ -793,7 +788,6 @@ body {
     }
 }
 
-/* Scroll to top button */
 .scroll-top {
     position: fixed;
     right: 24px;
@@ -957,7 +951,7 @@ body {
     }
 }
 
-/* Accessibility helper */
+
 .visually-hidden {
     position: absolute !important;
     height: 1px;
@@ -970,7 +964,6 @@ body {
     margin: -1px;
 }
 
-/* ABOUT */
 #aboutgap {
     display: flex;
     flex-direction: column;
@@ -997,7 +990,7 @@ body {
     display: flex;
 
     flex-direction: column;
-    /* justify-content: space-between; */
+
     align-items: center;
 
     gap: 30px;
@@ -1178,16 +1171,14 @@ body {
 
 #feature-image2 {
     width: 100%;
-    height: 220px;
-    /* sab cards ke liye same height */
-    overflow: hidden;
+    height: 220px;overflow: hidden;
 }
 
 #feature-image2 img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    /* best for cards */
+   
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
 }
@@ -1221,7 +1212,6 @@ body {
     font: 30px Roboto, sans-serif;
 }
 
-/* partners */
 .part-btn {
     border-radius: 30px;
     width: 220px;
@@ -1295,7 +1285,7 @@ body {
     justify-content: center
 }
 .carts{
-   ;
+   
     width: 250px;
     height: 350px;
     margin-bottom: 50px;
@@ -1304,4 +1294,145 @@ body {
 .carts img{
     width: 100%;
     height: 100%;
+}
+#carts{
+ background-color: #ffffff;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   gap: 50px;
+    width: 250px;
+    height: 380px;
+    margin-bottom: 50px;
+    border-radius: 15px;
+
+}
+.parcels{
+
+background-color: #F5F5F6; height: 100vh;
+
+}
+#carts img{
+     width: fit-content;
+    height: 20%;
+}
+#carts h3{     font: 30px Poppins, sans-serif;
+     font-weight: bolder;
+}
+#carts h4{
+  font: 15px Poppins, sans-serif;
+     font-weight: bolder;
+     max-width: 200px;
+}
+
+
+.main-container {
+    display: flex;
+    width: 100%;
+    gap: 50px;
+    align-items: flex-start;
+}
+
+
+.form-section {
+    flex: 1.2;
+    width: 50%;
+    padding: 50px;
+}
+
+.form-section h1 {
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+    font-weight: 800;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    font-size: 1rem;
+}
+
+.name-inputs {
+    display: flex;
+    gap: 15px;
+}
+
+.input-subgroup {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.sub-label {
+    font-size: 0.8rem;
+    color: #555;
+    margin-top: 5px;
+}
+
+input[type="text"],
+input[type="email"],
+textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+input:focus, textarea:focus {
+    border-color: #ff338b;
+}
+
+
+.submit-btn {
+    background-color: #ff338b;
+    color: white;
+    border: none;
+    padding: 12px 35px;
+    border-radius: 50px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.submit-btn:hover {
+    opacity: 0.9;
+}
+
+.image-section {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    height: 100%;
+    align-items: end;
+}
+
+.image-section img {
+    width: 100%;
+    height: 100%;
+}
+
+@media (max-width: 768px) {
+    .main-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .image-section {
+        order: -1;
+        margin-bottom: 30px;
+    }
+
+    .name-inputs {
+        flex-direction: column;
+    }
 }
